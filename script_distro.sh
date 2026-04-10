@@ -13,3 +13,11 @@ qemu-system-x86 #To test the image without real hardware
 
 sudo apt install -y git vim make gcc libncurses-dev flex bison bc \
 cpio libelf-dev libssl-dev syslinux dosfstools qemu-system-x86
+
+
+#Download the Linux kernel source code using a shallow clone to save time and space
+git clone --depth 1 https://github.com/torvalds/linux.git
+cd linux
+
+#Open the interactive configuration menu and ensure '64-bit kernel' is selected
+make menuconfig
