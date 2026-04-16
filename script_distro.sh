@@ -21,3 +21,18 @@ cd linux
 
 #Open the interactive configuration menu and ensure '64-bit kernel' is selected
 make menuconfig
+
+#The make -j 2 command starts the compilation process of the source code.
+#The -j 2 flag allows the system to use 2 CPU cores simultaneously, which speeds up the build process significantly.
+make -j 2
+
+#Creates the main workspace directory to store the distribution's components.
+sudo mkdir /boot-files
+
+#Copies the compiled Linux kernel (the "engine" of the OS) to the workspace.
+sudo cp arch/x86/boot/bzImage /boot-files/
+
+#Exits the kernel source directory to return to the main project folder.
+cd ..
+
+Kernel: arch/x86/boot/bzImage is ready  (#1)
