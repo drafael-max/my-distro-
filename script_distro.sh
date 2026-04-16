@@ -35,4 +35,22 @@ sudo cp arch/x86/boot/bzImage /boot-files/
 #Exits the kernel source directory to return to the main project folder.
 cd ..
 
+#Downloads the BusyBox source code using a shallow clone to save space.
+git clone --depth 1 https://git.busybox.net/busybox
+
+#Changes the current directory to the busybox folder.
+cd busybox
+
+#We configured the busybox.
+make menuconfig 
+
+#This command starts the compilation of BusyBox using 2 CPU cores to speed up the process
+make -j 2
+
+#Creates the destination directory for the initial RAM filesystem
+sudo mkdir -p /boot-files/initramfs
+
+#Installs BusyBox and creates the basic directory structure (bin, sbin, usr) inside the initramfs folder
+sudo make CONFIG_PREFIX=/boot-files/initramfs install
+
 Kernel: arch/x86/boot/bzImage is ready  (#1)
