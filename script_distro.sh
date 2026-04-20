@@ -1,3 +1,6 @@
+#Step 1: Create the Codespace
+
+#Step 2: Install dependencies
 #This command updates the package list in the repositories to ensure that we install the latest versions of the tools.
 sudo apt update
 
@@ -14,7 +17,7 @@ qemu-system-x86 #To test the image without real hardware
 sudo apt install -y git vim make gcc libncurses-dev flex bison bc \
 cpio libelf-dev libssl-dev syslinux dosfstools qemu-system-x86
 
-
+#Step 3: Compile the Linux kernel
 #Download the Linux kernel source code using a shallow clone to save time and space
 git clone --depth 1 https://github.com/torvalds/linux.git
 cd linux
@@ -35,6 +38,7 @@ sudo cp arch/x86/boot/bzImage /boot-files/
 #Exits the kernel source directory to return to the main project folder.
 cd ..
 
+#Step 4: Compile BusyBox
 #Downloads the BusyBox source code using a shallow clone to save space.
 git clone --depth 1 https://git.busybox.net/busybox
 
@@ -52,5 +56,35 @@ sudo mkdir -p /boot-files/initramfs
 
 #Installs BusyBox and creates the basic directory structure (bin, sbin, usr) inside the initramfs folder
 sudo make CONFIG_PREFIX=/boot-files/initramfs install
+
+#Step 5: Create the initramfs
+#Change to the /boot-files/initramfs directory.
+cd /boot-files/initramfs
+
+#Open (or create) the init file with the Vi editor with administrator privileges.
+sudo vi init
+
+#It tells the Kernel that this file should be read using the command interpreter (Shell).
+#!/bin/sh
+
+#It is the command that opens the terminal
+/bin/sh
+
+#Removes the default linuxrc file to avoid conflicts with our custom init script.
+sudo rm linuxrc
+
+#Grants execution permissions to the init script.
+sudo chmod +x init
+
+#Create an init.cpio file containing all the files in the current directory:
+#find .:lists files
+#cpio -o -H newc: packages them in cpio format
+#> ../init.cpio: saves the file in the parent directory
+sudo find . | cpio -o -H newc > ../init.cpio
+
+#Go up to the parent directory (one level up).
+cd ..
+
+#Step 6: Create the boot image
 
 Kernel: arch/x86/boot/bzImage is ready  (#1)
