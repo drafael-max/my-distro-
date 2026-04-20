@@ -86,5 +86,30 @@ sudo find . | cpio -o -H newc > ../init.cpio
 cd ..
 
 #Step 6: Create the boot image
+#Switch to the root (administrator) user with full privileges.
+sudo su
+
+#Creates a 50MB empty file named 'boot' to act as a virtual disk image.
+dd if=/dev/zero of=boot bs=1M count=50
+
+#Formats the virtual disk image with a FAT filesystem, compatible with the bootloader.
+mkfs -t fat boot
+
+#Installs the Syslinux bootloader onto the disk image to make it bootable.
+syslinux boot
+
+#Create a directory called m.
+mkdir m
+
+#Mounts the virtual disk image into the 'm' directory to allow file copying.
+mount boot m
+
+#Copies the Linux Kernel and the initramfs package into the virtual disk.
+cp bzImage init.cpio m
+
+#Unmounts the image to finalize changes and ensure data is correctly written.
+umount m
+
+
 
 Kernel: arch/x86/boot/bzImage is ready  (#1)
