@@ -110,6 +110,17 @@ cp bzImage init.cpio m
 #Unmounts the image to finalize changes and ensure data is correctly written.
 umount m
 
+#Step 7: Try with QEMU
+#qemu-system-x86_64	"Initiates the hardware emulator for the x86_64 architecture."
+#-nographic	"Command to run QEMU without a GUI, using the current terminal for I/O."
+#-append "console=ttyS0" "Kernel parameter that redirects all boot messages to the first serial port."
+#-kernel bzImage "Directs QEMU to use the custom-compiled Linux kernel image."
+#-initrd init.cpio	"Loads the initial RAM disk containing our root filesystem into memory."
+#-drive file=boot,format=raw	"Attaches the 50MB virtual disk as a raw storage device to the system."
 
+qemu-system-x86_64 -nographic -append "console=ttyS0" \
+ -kernel bzImage -initrd init.cpio -drive file=boot,format=raw
 
-Kernel: arch/x86/boot/bzImage is ready  (#1)
+#Exit the qemu
+#We press ctrl + a and then we press x
+
